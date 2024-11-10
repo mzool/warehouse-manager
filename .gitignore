@@ -1,0 +1,59 @@
+# Node.js dependencies
+node_modules/
+
+# Vite build output
+/dist/
+# Vite pre-bundled dependencies (if you use Vite 3.0+)
+/.vite/
+
+# Electron build output
+/out/
+# Electron builder output (packaged apps)
+/build/
+# Electron packager output (packaged apps)
+/electron-packager/
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# Log files
+*.log*
+
+# Environment files (can contain sensitive data)
+.env
+.env.local
+.env.*.local
+
+# Temporary files (e.g., VSCODE, JetBrains, etc.)
+.vscode/
+.idea/
+
+# npm package lock files for other package managers (if you use Yarn, pnpm, etc.)
+yarn.lock
+pnpm-lock.yaml
+
+# Optional: Ignore any custom folders for temporary data or cache
+.cache/
+tmp/
+
+# Other potential generated files
+*.swp
+*.swo
+*.bak
+*.backup
+
+# Vite cache for faster builds (optional)
+.vite/
+
+# Typescript cache (if using TypeScript)
+*.tsbuildinfo
+
+# SASS/SCSS cache
+.sass-cache/
+
+# Custom directories for temporary files
+temp/
+tmp/
