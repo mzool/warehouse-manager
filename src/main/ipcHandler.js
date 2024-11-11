@@ -1,10 +1,21 @@
-import { addMaterials, getMaterials, removeMaterial, updateMaterial } from './materials/materials'
-import getTables from './database/getTableInfo'
-import db from './database/init_db'
+import {
+  allDbs,
+  getAllItems,
+  updateItem,
+  getItemById,
+  deleteItem,
+  addItem
+} from './database/init_db'
 export default {
-  'get-materials': () => getMaterials(db),
-  'get-tables': () => getTables(db),
-  'add-materials': (e, data) => addMaterials(db, data),
-  'update-material': (e, data) => updateMaterial(db, data),
-  'remove-material': (e, data) => removeMaterial(db, data)
+  'get-materials': () => getAllItems(allDbs.materials),
+  'add-materials': async (e, materials) => {
+    try {
+      for (const mat of materials) {
+        await addItem(allDbs.materials, mat)
+      }
+      console.log('Materials added successfully')
+    } catch (error) {
+      console.error('Error adding materials: ', error)
+    }
+  }
 }

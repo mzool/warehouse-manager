@@ -3,20 +3,22 @@
   "version": "1.0.0",
   "description": "An Electron application with React",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "warehouse-manager.com",
   "homepage": "https://m-zool.com",
+  "type": "module",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
     "build": "electron-vite build",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "electron-builder install-app-deps && electron-rebuild --runtime=electron --target=31.0.2",
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "npm run build && electron-builder --mac",
     "build:linux": "npm run build && electron-builder --linux"
   },
+  "repository": "https://github.com/mzool/warehouse-manager",
   "build": {
     "appId": "com.warehouse-manager.id",
     "productName": "Warehouse Manager",
@@ -25,7 +27,8 @@
         "provider": "github",
         "owner": "mzool",
         "repo": "warehouse-manager",
-        "private": true
+        "private": false,
+        "releaseType": "release"
       }
     ],
     "mac": {
@@ -35,6 +38,12 @@
     "win": {
       "target": [
         "nsis"
+      ],
+      "extraResources": [
+        {
+          "from": "node_modules/sqlite3/lib/**/*",
+          "to": "dist/dlls"
+        }
       ]
     },
     "linux": {
@@ -46,11 +55,13 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
-    "electron-updater": "^6.1.7",
+    "@seald-io/nedb": "^4.0.4",
+    "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.3.9",
     "formik": "^2.4.6",
+    "node-addon-api": "^8.2.2",
     "papaparse": "^5.4.1",
     "react-icons": "^5.3.0",
-    "sqlite3": "^5.1.7",
     "yup": "^1.4.0"
   },
   "devDependencies": {
@@ -60,6 +71,7 @@
     "autoprefixer": "^10.4.20",
     "electron": "^31.0.2",
     "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9",
     "electron-vite": "^2.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",
