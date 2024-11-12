@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: com.warehouse-manager.app
 productName: Warehouse Manager
 directories:
   buildResources: build
@@ -9,8 +9,6 @@ files:
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
 asarUnpack:
-  - node_modules/sqlite3
-  - out/main/chunks/*.node
   - resources/****
 win:
   executableName: Warehouse Manager
@@ -40,5 +38,7 @@ appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
-  provider: generic
-  url: https://example.com/auto-updates
+  provider: github
+  owner: mzool
+  repo: warehouse-manager
+  releaseType: release

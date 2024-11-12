@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 const LoadingSpinner = ({
   size = 'h-8 w-8',
-  color = 'text-indigo-600',
+  color = 'text-slate-600 border-slate-600',
   duration = 5000,
   fallbackMessage = 'This is taking longer than usual...'
 }) => {
@@ -22,7 +22,7 @@ const LoadingSpinner = ({
       />
 
       {/* Fallback Message for Slow Responses */}
-      {isSlow && <p className="text-sm text-indigo-600">{fallbackMessage}</p>}
+      {isSlow && <p className={`text-sm ${color}`}>{fallbackMessage}</p>}
     </div>
   )
 }

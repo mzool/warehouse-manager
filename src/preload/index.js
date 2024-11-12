@@ -3,8 +3,13 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
+  clearDB: () => ipcRenderer.invoke('clear-db'),
   getMaterials: () => ipcRenderer.invoke('get-materials'),
-  addMaterials: (materials) => ipcRenderer.invoke('add-materials', materials)
+  addMaterials: (materials) => ipcRenderer.invoke('add-materials', materials),
+  removeMaterial: (id) => ipcRenderer.invoke('delete-material', id),
+  updateMaterial: (filter) => ipcRenderer.invoke('update-material', filter),
+  getMaterialSpecs: () => ipcRenderer.invoke('get-material-specs'),
+  updateMaterialSpecs: (data) => ipcRenderer.invoke('update-material-specs', data)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

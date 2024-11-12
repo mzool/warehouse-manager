@@ -5,6 +5,7 @@ import Modal from '../generators/modal'
 import DynamicForm from '../generators/form'
 import Notification from '../generators/notification'
 import LoadingSpinner from '../generators/loader'
+import ConfirmationDialog from '../generators/confrimationbox'
 const MaterialTable = () => {
   // State for search, filter, and pagination
   const [materials, setMaterials] = useState([])
@@ -15,11 +16,14 @@ const MaterialTable = () => {
   const [selectedRow, setSelected] = useState({})
   const [loading, setLoading] = useState(false) // Loading state
   const [message, setMessage] = useState({ success: '', error: '', open: false })
+  const [isDialogOpen, setIsDialogOpen] = useState(false) // State for confirmation dialog
+  const [rowToDelete, setRowToDelete] = useState(null) // State to keep track of row to delete
+
   // Form submit handler
   const handleSubmit = async (values) => {
     setLoading(true)
     try {
-      await window.api.updateMaterial(values)
+      await window.api.updateMaterial({ id: values._id, data: values })
       await fetchMaterials() // Refresh the material list after update
     } catch (error) {
       console.error('Error updating material:', error)
@@ -32,7 +36,6 @@ const MaterialTable = () => {
   // Fetch materials
   const fetchMaterials = async () => {
     setLoading(true)
-
     setMessage({ open: false, error: '', success: '' })
     try {
       let data = await window.api.getMaterials()
@@ -45,19 +48,26 @@ const MaterialTable = () => {
   }
 
   // Delete material handler
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this material?')) {
-      setLoading(true)
-      try {
-        await window.api.removeMaterial(id) // Call the removeMaterial API
-        await fetchMaterials() // Refresh the material list after delete
-        setMessage({ success: 'Material deleted successfully', error: '', open: true })
-      } catch (error) {
-        setMessage({ success: '', error: error.message, open: true })
-      } finally {
-        setLoading(false)
-      }
+  const handleDelete = async () => {
+    if (!rowToDelete) return
+    setLoading(true)
+    try {
+      await window.api.removeMaterial(rowToDelete) // Call the removeMaterial API
+      await fetchMaterials() // Refresh the material list after delete
+      setMessage({ success: 'Material deleted successfully', error: '', open: true })
+    } catch (error) {
+      setMessage({ success: '', error: error.message, open: true })
+    } finally {
+      setLoading(false)
+      setIsDialogOpen(false)
+      setRowToDelete(null)
     }
+  }
+
+  // Open confirmation dialog before delete
+  const confirmDelete = (id) => {
+    setRowToDelete(id)
+    setIsDialogOpen(true)
   }
 
   useEffect(() => {
@@ -81,27 +91,31 @@ const MaterialTable = () => {
       <Modal
         isOpen={modal.open}
         title={modal.title}
-        onClose={() => setModal({ open: false, title: '' })}
+        onClose={() => {
+          setModal({ open: false, title: '' })
+          setSelected({})
+        }}
       >
-        <DynamicForm
-          fields={Object.entries(selectedRow).map(([key, value]) => ({
-            id: key,
-            name: key,
-            required: false,
-            type: 'text',
-            initialValue: value,
-            readonly: key === 'id' ? true : false
-          }))}
-          onSubmit={handleSubmit}
-          colorSchema={{
-            inputText: '#1E293B', // Slate-800 for text
-            formBg: '#F8FAFC', // Gray-50 for form background
-            border: '#CBD5E1', // Gray-300 for input borders
-            submitButton: '#1e293b' // Slate-900 for button background
-          }}
-        />
+        {
+          <DynamicForm
+            fields={Object.entries(selectedRow).map(([key, value]) => ({
+              id: key,
+              name: key,
+              required: false,
+              type: 'text',
+              initialValue: value,
+              readonly: key === '_id' ? true : false
+            }))}
+            onSubmit={handleSubmit}
+            colorSchema={{
+              inputText: '#1E293B', // Slate-800 for text
+              formBg: '#F8FAFC', // Gray-50 for form background
+              border: '#CBD5E1', // Gray-300 for input borders
+              submitButton: '#1e293b' // Slate-900 for button background
+            }}
+          />
+        }
       </Modal>
-
       {/* DataTable with edit and delete actions */}
       <DataTable
         data={materials}
@@ -126,10 +140,21 @@ const MaterialTable = () => {
           {
             name: 'delete',
             label: <BiTrash />,
-            handler: (row) => handleDelete(row.id), // Delete material by id
+            handler: (row) => confirmDelete(row._id), // Open confirmation dialog before delete
             color: 'red'
           }
         ]}
+      />
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={isDialogOpen}
+        title="Confirm Deletion"
+        message="Are you sure you want to delete this material?"
+        confirmButtonLabel="Delete"
+        cancelButtonLabel="Cancel"
+        onConfirm={handleDelete}
+        onCancel={() => setIsDialogOpen(false)}
       />
     </>
   )

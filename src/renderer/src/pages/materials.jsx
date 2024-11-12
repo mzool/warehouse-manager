@@ -2,6 +2,7 @@ import MaterialsForm from '../components/materials/addNew'
 import MaterialTable from '../components/materials/getMaterials'
 import Tabs from '../components/generators/tabs'
 import GoHomeNav from '../components/goHomeNav'
+import SpeceifcationPage from '../components/materials/specification'
 
 function Materials() {
   // Define tabs for the Tabs component
@@ -10,7 +11,8 @@ function Materials() {
       label: 'Add Material',
       content: <MaterialsForm onSubmit={addMaterialsToDb} />
     },
-    { label: 'View Materials', content: <MaterialTable /> }
+    { label: 'View Materials', content: <MaterialTable /> },
+    { label: 'Specification Page', content: <SpeceifcationPage /> }
   ]
 
   return (

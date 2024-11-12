@@ -2,12 +2,14 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { initGlobalErrorHandlers } from './errorHandler'
-import ipcHandler from './ipcHandler'
+import ipcHandler from './ipcHandler.js'
 import updater from 'electron-updater' // ✅
+import dotenv from 'dotenv'
 
-
+dotenv.config()
 // Define the update server URL (this can be GitHub releases, or your custom server)
-const feedURL = 'https://github.com/mzool/warehouse-manager/releases/1.0.0'
+const feedURL =
+  'https://github.com/mzool/warehouse-manager/releases/download/1.0.1/Warehouse.Manager.Setup.1.0.1.exe'
 
 // Function to handle updates
 function checkForUpdates() {
@@ -15,7 +17,8 @@ function checkForUpdates() {
     provider: 'github',
     url: feedURL,
     owner: 'mzool', // GitHub repository owner (your username or org)
-    repo: 'warehouse-manager' // GitHub repository name
+    repo: 'warehouse-manager', // GitHub repository name,
+    //token: process.env.auth_token
   })
 
   // Start checking for updates

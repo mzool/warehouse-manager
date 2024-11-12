@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Tooltip from './tooltip'
 
 // DataTable component
@@ -7,6 +7,9 @@ const DataTable = ({ data = [], colorSchema, selectedCols = [], actions }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+
+  // Collect unique keys for headers across all data rows
+  const uniqueHeaders = useMemo(() => Array.from(new Set(data.flatMap(Object.keys))), [data])
 
   // Filter data based on the search term
   useEffect(() => {
@@ -75,7 +78,7 @@ const DataTable = ({ data = [], colorSchema, selectedCols = [], actions }) => {
                       {key}
                     </th>
                   ))
-                : Object.keys(data[0] || {}).map((key) => (
+                : uniqueHeaders.map((key) => (
                     <th
                       key={key}
                       className="p-2 border text-left sticky top-0 z-10"
@@ -102,13 +105,17 @@ const DataTable = ({ data = [], colorSchema, selectedCols = [], actions }) => {
                   rowIndex % 2 === 0 ? colorSchema.evenRow : colorSchema.oddRow
                 }`}
               >
-                {Object.entries(row)
-                  .filter(([key]) => selectedCols.length === 0 || selectedCols.includes(key))
-                  .map((ent, cellIndex) => (
-                    <td key={cellIndex} className="p-2 border">
-                      {ent[1]}
-                    </td>
-                  ))}
+                {selectedCols.length > 0
+                  ? selectedCols.map((header, cellIndex) => (
+                      <td key={cellIndex} className="p-2 border">
+                        {row[header] ?? ''} {/* Display blank if value is missing */}
+                      </td>
+                    ))
+                  : uniqueHeaders.map((header, cellIndex) => (
+                      <td key={cellIndex} className="p-2 border">
+                        {row[header] ?? ''} {/* Display blank if value is missing */}
+                      </td>
+                    ))}
                 {actions && (
                   <td className="p-2 border">
                     {actions.map((action, index) => (

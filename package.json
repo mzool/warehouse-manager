@@ -1,6 +1,6 @@
 {
   "name": "warehouse-manager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An Electron application with React",
   "main": "./out/main/index.js",
   "author": "warehouse-manager.com",
@@ -22,6 +22,11 @@
   "build": {
     "appId": "com.warehouse-manager.id",
     "productName": "Warehouse Manager",
+    "files": [
+      "build/**/*",
+      "dist/**/*",
+      "out/**/*"
+    ],
     "publish": [
       {
         "provider": "github",
@@ -36,14 +41,10 @@
       "target": "dmg"
     },
     "win": {
+      "executableName": "Warehouse Manager",
+      "icon": "resources/icon.png",
       "target": [
         "nsis"
-      ],
-      "extraResources": [
-        {
-          "from": "node_modules/sqlite3/lib/**/*",
-          "to": "dist/dlls"
-        }
       ]
     },
     "linux": {
@@ -56,6 +57,7 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@seald-io/nedb": "^4.0.4",
+    "dotenv": "^16.4.5",
     "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.3.9",
     "formik": "^2.4.6",

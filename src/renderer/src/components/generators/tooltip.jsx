@@ -23,7 +23,7 @@ const Tooltip = ({ children, content, position = 'top' }) => {
       {/* Tooltip Content */}
       {isVisible && (
         <div
-          className={`absolute whitespace-nowrap bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg transition-opacity duration-200 ease-in-out ${positionClasses[position]}`}
+          className={`z-20 absolute whitespace-nowrap bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg transition-opacity duration-200 ease-in-out ${positionClasses[position]}`}
         >
           {content}
         </div>
